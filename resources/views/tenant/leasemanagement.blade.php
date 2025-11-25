@@ -34,8 +34,7 @@
                                 Status: <strong>{{ $lease->lea_status }}</strong>
                             </p>
 
-                            <a href="#" class="btn btn-primary btn-sm mt-2">
-                                View Details
+                            
                             </a>
                         </div>
                     </div>

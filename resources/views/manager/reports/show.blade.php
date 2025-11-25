@@ -278,14 +278,45 @@
 
                             {{-- LEASES --}}
                             @elseif($report === 'lease-summary')
-                            @php $lease = $item->leases->first(); @endphp
-                            <tr>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->tenantApplication->unit_type ?? 'N/A' }}</td>
-                                <td>{{ $lease?->lea_start_date ? \Carbon\Carbon::parse($lease->lea_start_date)->format('M d, Y') : 'N/A' }}</td>
-                                <td>{{ $lease?->lea_end_date ? \Carbon\Carbon::parse($lease->lea_end_date)->format('M d, Y') : 'N/A' }}</td>
-                                <td>{{ $lease?->lea_terms ?? 'N/A' }}</td>
-                            </tr>
+                                @php
+                                    // Get ALL active leases of the tenant
+                                    $leases = $item->leases->where('lea_status', 'active');
+                                @endphp
+
+                                {{-- If tenant has no active leases --}}
+                                @if($leases->isEmpty())
+                                    <tr>
+                                        <td>{{ $item->name }}</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                        <td>N/A</td>
+                                    </tr>
+                                @else
+                                    {{-- Loop through ALL active leases (main + additional units) --}}
+                                    @foreach($leases as $lease)
+                                        <tr>
+                                            <td>{{ $item->name }}</td>
+
+                                            {{-- unit type (from tenantApplication or lease->unit->unit_type depending on your structure) --}}
+                                            <td>{{ $lease->unit->unit_type ?? $item->tenantApplication->unit_type ?? 'N/A' }}</td>
+
+                                            <td>
+                                                {{ $lease->lea_start_date
+                                                    ? \Carbon\Carbon::parse($lease->lea_start_date)->format('M d, Y')
+                                                    : 'N/A' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $lease->lea_end_date
+                                                    ? \Carbon\Carbon::parse($lease->lea_end_date)->format('M d, Y')
+                                                    : 'N/A' }}
+                                            </td>
+
+                                            <td>{{ $lease->lea_terms ?? 'N/A' }}</td>
+                                        </tr>
+                                    @endforeach
+                                @endif
 
                             <!-- MAINTENANCE -->
                             @elseif($report === 'maintenance-requests')

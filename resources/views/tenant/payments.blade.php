@@ -22,13 +22,25 @@
      {{-- 🏠 Payment Summary Cards --}}
     <div class="row g-4 mb-4">
         <div class="col-md-4">
-            <div class="card border-0 rounded-4 shadow-sm h-100 bg-gradient-warning text-white">
-                <div class="card-body d-flex flex-column justify-content-center text-center">
-                    <i class="bi bi-cash-coin fs-1 mb-2 opacity-75"></i>
-                    <h6 class="fw-semibold">Unpaid Rent ({{ $unpaidRentMonth }})</h6>
-                    <h3 class="fw-bold mb-0">₱{{ number_format($unpaidRent, 2) }}</h3>
+                <div class="card border-0 rounded-4 shadow-sm h-100 bg-gradient-warning text-white">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <i class="bi bi-cash-coin fs-1 mb-2 opacity-75"></i>
+
+                        @php
+                            $user = auth()->user();
+                            $hasDeposit = $user->deposit_amount > 0;
+                        @endphp
+
+                        @if($hasDeposit)
+                            <h6 class="fw-semibold">Pending Deposit</h6>
+                            <h3 class="fw-bold mb-0">₱{{ number_format($user->deposit_amount, 2) }}</h3>
+                        @else
+                            <h6 class="fw-semibold">Unpaid Rent ({{ $unpaidRentMonth }})</h6>
+                            <h3 class="fw-bold mb-0">₱{{ number_format($unpaidRent, 2) }}</h3>
+                        @endif
+
+                    </div>
                 </div>
-            </div>
         </div>
 
         <div class="col-md-4">

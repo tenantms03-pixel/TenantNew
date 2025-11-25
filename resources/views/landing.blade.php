@@ -45,7 +45,7 @@
                         <span class="badge bg-success mb-3">Vacant</span>
                         <ul class="list-unstyled mb-0">
                             @foreach($typeUnits as $unit)
-                                <li class="py-1">Room No: {{ $unit->room_no }}</li>
+                                <li class="py-1">Room No: {{ $unit->room_no }} [{{ $unit->no_of_occupants }}/{{ $unit->capacity }}]
                             @endforeach
                         </ul>
                     </div>
